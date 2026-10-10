@@ -1,8 +1,4 @@
 <resources>
-    <string name="app_name">Rubel App Launcher</string>
-    <string name="title">Rubel App</string>
-    <string name="open_app">অ্যাপ খুলুন</string>
-    <string name="app_available">Rubel App ইনস্টল করা আছে।</string>
-    <string name="app_missing">com.ijtc.rubelapp ইনস্টল করা নেই।</string>
-    <string name="app_unavailable">অ্যাপটি এখন চালু করা যাচ্ছে না।</string>
+    <string name="app_name">RubelApp</string>
+    <string name="supabase_function_url">https://mjwrptclciaczencvyny.supabase.co/functions/v1/ijtc</string>
 </resources>

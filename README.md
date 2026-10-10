@@ -1,15 +1,55 @@
-# Rubel App Launcher
+# RubelApp
 
-একটি ছোট Android Home launcher, যা ইনস্টল করা `com.ijtc.rubelapp` অ্যাপটি খোলে।
-এটি kiosk lock নয়; Android-এর Home app হিসেবে সেট করলেও অন্য অ্যাপে যাওয়া বন্ধ করে না।
+Complete Android app and backend source for `com.ijtc.rubelapp`.
+The project builds and tests in GitHub Actions, installs the debug APK in an Android emulator,
+and publishes the emulator-tested APK for download.
 
-## Debug APK
+## Test and download
 
-GitHub Actions-এর **Android debug APK** workflow প্রতিটি push ও pull request-এ:
+1. Open [Run or view the Android emulator test](https://github.com/properfixerit/jmu/actions/workflows/rubelapp-android.yml).
+2. Select **Run workflow** to start a test, or open the latest completed run.
+3. Download the APK using either the run's **Artifacts** link or the
+   [latest emulator-tested RubelApp APK](https://github.com/properfixerit/jmu/releases/download/test-latest/RubelApp-debug.apk).
 
-1. Debug APK তৈরি করে।
-2. Android emulator-এ APK ইনস্টল করে launcher চালু আছে কি না যাচাই করে।
-3. `rubel-app-launcher-debug` নামে APK artifact প্রকাশ করে।
+Each successful run on `main` builds the app, runs unit tests, installs and launches it on a
+Pixel 2 Android 15 emulator, then refreshes the APK at the download link above.
+The APK is a debug build, not a Play Store release. Android displays a warning when installing
+debug APKs from outside the Play Store.
 
-Workflow run-এর **Artifacts** অংশ থেকে APK ডাউনলোড করে ফোনে ইনস্টল করা যায়।
-Rubel App আলাদাভাবে ইনস্টল থাকতে হবে; emulator smoke check launcher-টিই চালায়।
+The emulator smoke test verifies that the app installs and its main activity starts. The
+`com.ijtc.rubelapp` app and its backend are not installed or configured in the emulator.
+
+## Local Android build
+
+Install Java 25 and Android SDK 37, then run:
+
+```text
+gradlew.bat -PskipInstallAndRun=true assembleDebug
+```
+
+The APK is written to `app/build/outputs/apk/debug/app-debug.apk`.
+`-PskipInstallAndRun=true` skips the optional local-device install task.
+
+## Backend configuration
+
+Keep `local.properties` out of source control. To enable the RubelApp Supabase Edge Function
+in local builds, put the project's URL and publishable key in that ignored file:
+
+```properties
+supabase.rubelapp.url=https://YOUR_PROJECT_REF.supabase.co
+supabase.rubelapp.publishableKey=YOUR_PROJECT_PUBLISHABLE_KEY
+```
+
+GitHub Actions does not require backend credentials to build or emulator-test the app. To
+enable the backend in GitHub-built APKs, configure the repository Actions variables
+`RUBELAPP_SUPABASE_URL` and `RUBELAPP_SUPABASE_PUBLISHABLE_KEY`. Never add service-role
+keys, GitHub tokens, SMTP passwords, or other private credentials to the app or repository.
+
+The app's `ijtc` function allows unauthenticated writes to its documented, restricted file
+allowlist. Review `supabase/functions/ijtc/index.ts` before deploying or using that backend.
+
+## Deploy the Supabase function
+
+The optional **Deploy RubelApp Edge Function** workflow deploys the separate `rubelapp`
+Supabase function when manually run. Configure `SUPABASE_ACCESS_TOKEN` and
+`SUPABASE_PROJECT_REF` as GitHub Actions secrets first.

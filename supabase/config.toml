@@ -1,0 +1,8 @@
+[functions.recover-code]
+verify_jwt = false
+
+[functions.rubelapp]
+verify_jwt = false
+
+[functions.ijtc]
+verify_jwt = false
