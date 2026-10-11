@@ -6,11 +6,11 @@ and publishes the emulator-tested APK for download.
 
 ## Test and download
 
-1. Open [Run or view the Android emulator test](https://github.com/properfixerit/jmu/actions/workflows/rubelapp-android.yml).
+1. Open [Run or view the Android emulator test](https://github.com/properfixerit/Andemo/actions/workflows/rubelapp-android.yml).
 2. Select **Run workflow** to start a test, or open the latest completed run.
 3. Download the **rubelapp-debug** artifact from the run's **Artifacts** section. Successful
    emulator runs also publish the
-   [latest emulator-tested RubelApp APK](https://github.com/properfixerit/jmu/releases/download/test-latest/RubelApp-debug.apk).
+   [latest emulator-tested RubelApp APK](https://github.com/properfixerit/Andemo/releases/download/test-latest/RubelApp-debug.apk).
 
 Each run on `main` builds the app and uploads a debug APK before installing and launching it on a
 Pixel 2 Android 15 emulator. A successful emulator run also refreshes the APK at the download link above.
