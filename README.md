@@ -2,23 +2,39 @@
 
 Complete Android app and backend source for `com.ijtc.rubelapp`.
 The project builds and tests in GitHub Actions, installs the debug APK in an Android emulator,
-and publishes the emulator-tested APK for download.
+publishes the emulator-tested APK for download, and can upload it to Appetize for interactive
+browser testing.
 
 ## Test and download
 
 1. Open [Run or view the Android emulator test](https://github.com/properfixerit/Andemo/actions/workflows/rubelapp-android.yml).
 2. Select **Run workflow** to start a test, or open the latest completed run.
-3. Download the **rubelapp-debug** artifact from the run's **Artifacts** section. Successful
-   emulator runs also publish the
+3. Open the **Run RubelApp in your browser** link in the run summary for the interactive Appetize
+   emulator. You can also download the **rubelapp-debug** artifact from the run's **Artifacts**
+   section or use the
    [latest emulator-tested RubelApp APK](https://github.com/properfixerit/Andemo/releases/download/test-latest/RubelApp-debug.apk).
 
 Each run on `main` builds the app and uploads a debug APK before installing and launching it on a
-Pixel 2 Android 15 emulator. A successful emulator run also refreshes the APK at the download link above.
+Pixel 2 Android 15 emulator. When the Appetize API token is configured, the run also uploads the
+APK to Appetize and adds a browser-playable link to the run summary. It always refreshes the
+download link above after a successful emulator test.
 The APK is a debug build, not a Play Store release. Android displays a warning when installing
 debug APKs from outside the Play Store.
 
+## Appetize browser emulator
+
+To publish a browser-playable APK from GitHub Actions, add an Appetize API token as the
+`APPETIZE_API_TOKEN` repository Actions secret. Create one in the
+[Appetize organization API Tokens settings](https://appetize.io/organization/api-tokens).
+The first upload creates an Appetize app and includes its browser link in the
+workflow run summary. To update the same Appetize app on later runs, save that app's public key
+as the `APPETIZE_PUBLIC_KEY` repository Actions secret.
+
+If `APPETIZE_API_TOKEN` is not configured, the build, APK download, and GitHub emulator test
+still run; only the Appetize upload is skipped.
+
 The emulator smoke test verifies that the app installs and its main activity starts. The
-`com.ijtc.rubelapp` app and its backend are not installed or configured in the emulator.
+RubelApp backend is not installed or configured in the emulator.
 
 ## Local Android build
 

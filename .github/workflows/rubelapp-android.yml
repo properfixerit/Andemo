@@ -81,6 +81,35 @@ jobs:
             sleep 15
             adb shell pidof com.ijtc.rubelapp
 
+      - name: Check Appetize API token
+        id: appetize-config
+        env:
+          APPETIZE_API_TOKEN: ${{ secrets.APPETIZE_API_TOKEN }}
+        run: |
+          if [ -n "$APPETIZE_API_TOKEN" ]; then
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Upload APK to Appetize
+        id: appetize
+        if: ${{ steps.appetize-config.outputs.configured == 'true' }}
+        uses: appetizeio/github-action-appetize@2a2c772c74955925c1a7575fea8e4d58056f547d
+        with:
+          apiToken: ${{ secrets.APPETIZE_API_TOKEN }}
+          publicKey: ${{ secrets.APPETIZE_PUBLIC_KEY }}
+          appFile: app/build/outputs/apk/debug/app-debug.apk
+          platform: android
+          note: RubelApp debug build from GitHub Actions
+          buttonText: Run RubelApp
+
+      - name: Add Appetize browser link to summary
+        if: ${{ steps.appetize.outputs.publicKey != '' }}
+        run: echo "## Run RubelApp in your browser" >> "$GITHUB_STEP_SUMMARY" && echo "https://appetize.io/app/${APPETIZE_PUBLIC_KEY}?device=pixel11pro&osVersion=17.0&toolbar=true" >> "$GITHUB_STEP_SUMMARY"
+        env:
+          APPETIZE_PUBLIC_KEY: ${{ steps.appetize.outputs.publicKey }}
+
       - name: Publish the latest emulator-tested APK
         env:
           GH_TOKEN: ${{ github.token }}
